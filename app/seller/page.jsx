@@ -14,7 +14,37 @@ const AddProduct = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('description', description);
+    formData.append('category', category);
+    formData.append('price', price);
+    formData.append('offerPrice', offerPrice);
+    files.forEach(file => {
+      formData.append('files', file);
+    });
 
+    try {
+      const response = await fetch('/api/product', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await response.json();
+      if (data.success) {
+        alert('Product added successfully');
+        setFiles([]);
+        setName('');
+        setDescription('');
+        setCategory('Earphone');
+        setPrice('');
+        setOfferPrice('');
+      } else {
+        alert('Failed to add product');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An error occurred while adding the product');
+    }
   };
 
   return (
